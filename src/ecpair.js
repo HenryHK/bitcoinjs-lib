@@ -101,9 +101,24 @@ function makeRandom (options) {
   return fromPrivateKey(d, options)
 }
 
+ECPair.prototype.getAddress = function () {
+  return baddress.toBase58Check(bcrypto.hash160(this.getPublicKeyBuffer()), this.getNetwork().pubKeyHash)
+}
+
+ECPair.prototype.getNetwork = function () {
+  return this.network
+}
+
+ECPair.prototype.getPublicKeyBuffer = function () {
+  return this.Q.getEncoded(this.compressed)
+}
+
 module.exports = {
   makeRandom,
   fromPrivateKey,
   fromPublicKey,
-  fromWIF
+  fromWIF,
+  getPublicKeyBuffer,
+  getNetwork,
+  getAddress
 }
