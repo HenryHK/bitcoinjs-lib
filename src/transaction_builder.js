@@ -7,6 +7,8 @@ var networks = require('./networks')
 var ops = require('bitcoin-ops')
 var typeforce = require('typeforce')
 var types = require('./types')
+var bufferReverse = require('buffer-reverse')
+
 var scriptTypes = btemplates.types
 var SIGNABLE = [btemplates.types.P2PKH, btemplates.types.P2PK, btemplates.types.MULTISIG]
 var P2SH = SIGNABLE.concat([btemplates.types.P2WPKH, btemplates.types.P2WSH])
@@ -541,7 +543,7 @@ TransactionBuilder.prototype.addInput = function (txHash, vout, sequence, prevOu
   // is it a hex string?
   if (typeof txHash === 'string') {
     // transaction hashs's are displayed in reverse order, un-reverse it
-    txHash = Buffer.from(txHash, 'hex').reverse()
+    txHash = bufferReverse(new Buffer(txHash, 'hex'))
 
   // is it a Transaction object?
   } else if (txHash instanceof Transaction) {
