@@ -1,7 +1,7 @@
 var baddress = require('./address')
 var bcrypto = require('./crypto')
 var ecdsa = require('./ecdsa')
-var randomBytes = require('react-native-randombytes')
+var randomBytes = require('randombytes')
 var typeforce = require('typeforce')
 var types = require('./types')
 var wif = require('wif')
@@ -12,7 +12,7 @@ var BigInteger = require('bigi')
 var ecurve = require('ecurve')
 var secp256k1 = ecdsa.__curve
 
-function ECPair (d, Q, options) {
+function ECPair(d, Q, options) {
   if (options) {
     typeforce({
       compressed: types.maybe(types.Boolean),
@@ -69,7 +69,7 @@ ECPair.fromWIF = function (string, network) {
 
     if (!network) throw new Error('Unknown network version')
 
-  // otherwise, assume a network object (or default to bitcoin)
+    // otherwise, assume a network object (or default to bitcoin)
   } else {
     network = network || NETWORKS.bitcoin
 
@@ -87,7 +87,7 @@ ECPair.fromWIF = function (string, network) {
 ECPair.makeRandom = function (options) {
   options = options || {}
 
-  var rng = options.rng || randomBytes.randomBytes
+  var rng = options.rng || randomBytes
 
   var d
   do {
