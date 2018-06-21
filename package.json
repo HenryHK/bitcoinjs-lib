@@ -42,6 +42,7 @@
     "ecurve": "^1.0.0",
     "merkle-lib": "^2.0.10",
     "pushdata-bitcoin": "^1.0.1",
+    "tiny-secp256k1": "^0.1.0",
     "randombytes": "^2.0.1",
     "safe-buffer": "^5.1.1",
     "typeforce": "^1.11.3",

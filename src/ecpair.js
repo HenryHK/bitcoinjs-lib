@@ -5,6 +5,7 @@ var randomBytes = require('randombytes')
 var typeforce = require('typeforce')
 var types = require('./types')
 var wif = require('wif')
+let ecc = require('tiny-secp256k1')
 
 var NETWORKS = require('./networks')
 var BigInteger = require('bigi')
@@ -30,7 +31,6 @@ function ECPair(d, Q, options) {
     this.d = d
   } else {
     typeforce(types.ECPoint, Q)
-
     this.__Q = Q
   }
 
@@ -43,7 +43,18 @@ Object.defineProperty(ECPair.prototype, 'Q', {
     if (!this.__Q && this.d) {
       this.__Q = secp256k1.G.multiply(this.d)
     }
+    return this.__Q
+  }
+})
 
+Object.defineProperty(ECPair.prototype, 'privateKey', {
+  enumerable: false,
+  get: function () { return this.d }
+})
+
+Object.defineProperty(ECPair.prototype, 'publicKey', {
+  get: function () {
+    if (!this.__Q) this.__Q = ecc.pointFromScalar(this.__d, this.compressed)
     return this.__Q
   }
 })
