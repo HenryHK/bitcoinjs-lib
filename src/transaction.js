@@ -410,7 +410,7 @@ Transaction.prototype.getHash = function () {
 Transaction.prototype.getId = function () {
   // transaction hash's are displayed in reverse order
   // return this.getHash().reverse().toString('hex')
-  return reverseBuffer(new Buffer(this.getHash(), 'hex'))
+  return new Buffer(reverseBuffer(new Buffer(this.getHash(), 'hex'))).toString('hex')
 }
 
 Transaction.prototype.toBuffer = function (buffer, initialOffset) {
