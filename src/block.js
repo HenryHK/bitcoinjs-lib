@@ -7,7 +7,7 @@ var varuint = require('varuint-bitcoin')
 
 var Transaction = require('./transaction')
 
-function Block () {
+function Block() {
   this.version = 1
   this.prevHash = null
   this.merkleRoot = null
@@ -20,18 +20,18 @@ Block.fromBuffer = function (buffer) {
   if (buffer.length < 80) throw new Error('Buffer too small (< 80 bytes)')
 
   var offset = 0
-  function readSlice (n) {
+  function readSlice(n) {
     offset += n
     return buffer.slice(offset - n, offset)
   }
 
-  function readUInt32 () {
+  function readUInt32() {
     var i = buffer.readUInt32LE(offset)
     offset += 4
     return i
   }
 
-  function readInt32 () {
+  function readInt32() {
     var i = buffer.readInt32LE(offset)
     offset += 4
     return i
@@ -47,13 +47,13 @@ Block.fromBuffer = function (buffer) {
 
   if (buffer.length === 80) return block
 
-  function readVarInt () {
+  function readVarInt() {
     var vi = varuint.decode(buffer, offset)
     offset += varuint.decode.bytes
     return vi
   }
 
-  function readTransaction () {
+  function readTransaction() {
     var tx = Transaction.fromBuffer(buffer.slice(offset), true)
     offset += tx.byteLength()
     return tx
@@ -87,7 +87,7 @@ Block.prototype.getHash = function () {
 }
 
 Block.prototype.getId = function () {
-  return this.getHash().reverse().toString('hex')
+  return bufferReverse(new Buffer(this.getHash(), 'hex'))
 }
 
 Block.prototype.getUTCDate = function () {
@@ -102,16 +102,16 @@ Block.prototype.toBuffer = function (headersOnly) {
   var buffer = Buffer.allocUnsafe(this.byteLength(headersOnly))
 
   var offset = 0
-  function writeSlice (slice) {
+  function writeSlice(slice) {
     slice.copy(buffer, offset)
     offset += slice.length
   }
 
-  function writeInt32 (i) {
+  function writeInt32(i) {
     buffer.writeInt32LE(i, offset)
     offset += 4
   }
-  function writeUInt32 (i) {
+  function writeUInt32(i) {
     buffer.writeUInt32LE(i, offset)
     offset += 4
   }
@@ -168,7 +168,7 @@ Block.prototype.checkMerkleRoot = function () {
 }
 
 Block.prototype.checkProofOfWork = function () {
-  var hash = this.getHash().reverse()
+  var hash = bufferReverse(new Buffer(this.getHash()))
   var target = Block.calculateTarget(this.bits)
 
   return hash.compare(target) <= 0
